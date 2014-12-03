@@ -46,7 +46,8 @@ def parse(infile, outfile):
 
 	# Write intervals
 	with open(outfile + '.intervals', 'w') as intervalsfile:
-		print('\r\n'.join([str(interval) for interval in intervals]), file=intervalsfile);
+		print('\r\n'.join([str(interval) for interval in intervals]),
+			file=intervalsfile);
 
 	# Write dataset
 	with open(outfile + '.data', 'w') as parsedfile:

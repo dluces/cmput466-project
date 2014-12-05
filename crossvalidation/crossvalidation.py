@@ -2,7 +2,7 @@ import argparse
 import os
 from pylab import *
 
-def generate(infile, outdir, k):
+def generate(infile, outdir, k, t):
 	"""
 	Generates the k-directories inside the outdir.
 	It will then create four files in each directory:
@@ -26,10 +26,9 @@ def generate(infile, outdir, k):
 	basefilename = os.path.basename(os.path.splitext(infile)[0]);
 
 	# Get intervals
-	intervals = set();
-	for example in data:
-		intervals.add(float(example.split(' ')[0]));
-	intervals = [str(example) for example in sorted(intervals)];
+	intervals = sorted([float(example.split(' ')[0]) for example in data]);
+	intervals_step = (intervals[-1] - intervals[0])/(t-1);
+	intervals = [str(intervals[0] + i*intervals_step) for i in range(t)];
 
 	# Create the output directory if it does not exit
 	if not os.path.exists(outdir):
@@ -85,12 +84,14 @@ def main():
 		help='output directory.');
 	parser.add_argument('--folds', '-f', dest='folds', default=5,
 		help='number of iterations for the crossvalidation.');
+	parser.add_argument('--intervals', '-t', dest='intervals', default=100,
+		help='number of intervals to generate.');
 
 	# Parse the arguments
 	args = parser.parse_args();
 	
 	# Generate the datasets
-	return generate(args.infile, args.outdir, args.folds);
+	return generate(args.infile, args.outdir, args.folds, int(args.intervals));
 
 
 if __name__ == '__main__':

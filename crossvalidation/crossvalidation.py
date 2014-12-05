@@ -21,6 +21,24 @@ def generate(infile, outdir, k):
 	with open(infile, newline='') as dataset:
 		# Loop over all the examples
 		data = dataset.readlines();
+
+	# Get the base filename (basically, the dataset name)
+	basefilename = os.path.basename(os.path.splitext(infile)[0]);
+
+	# Get intervals
+	intervals = set();
+	for example in data:
+		intervals.add(float(example.split(' ')[0]));
+	intervals = [str(example) for example in sorted(intervals)];
+
+	# Create the output directory if it does not exit
+	if not os.path.exists(outdir):
+		os.makedirs(outdir);
+
+	# Write intervals
+	intervalsname = os.path.join(outdir, basefilename + '.intervals');
+	with open(intervalsname, 'w') as writefile:
+		print('\r\n'.join(intervals), file=writefile);
 		
 	# Shuffle data
 	shuffle(data);
@@ -33,48 +51,27 @@ def generate(infile, outdir, k):
 		# Validation set will be the current fold
 		validation = folds[i];
 
-		# Validation intervals
-		validationi = set();
-		for example in validation:
-			validationi.add(float(example.split(' ')[0]))
-		validationi = [str(example) for example in sorted(validationi)];
-
 		# Training set will be the examples in the rest of the folds
 		training = [example for fold in folds if fold is not validation
 					for example in fold];
-
-		# Training intervals
-		trainingi = set();
-		for example in training:
-			trainingi.add(float(example.split(' ')[0]))
-		trainingi = [str(example) for example in sorted(trainingi)];
 
 		# Path for current fold
 		path = os.path.abspath(os.path.join(outdir, 'fold'+str(i+1)));
 
 		# Create the directory for the current fold
 		if not os.path.exists(path):
-			os.makedirs(path)
+			os.makedirs(path);
 
 		# Prefix for the filenames
-		filename = os.path.basename(os.path.splitext(infile)[0]);
-		filename = os.path.join(path, filename);
+		filename = os.path.join(path, basefilename);
 
 		# Write validation dataset
 		with open(filename + '.valid.data', 'w') as writefile:
 			print(''.join(validation), file=writefile);
 
-		# Write validation intervals
-		with open(filename + '.valid.intervals', 'w') as writefile:
-			print('\r\n'.join(validationi), file=writefile);
-
 		# Write training dataset
 		with open(filename + '.train.data', 'w') as writefile:
 			print(''.join(training), file=writefile);
-
-		# Write training intervals
-		with open(filename + '.train.intervals', 'w') as writefile:
-			print('\r\n'.join(trainingi), file=writefile);
 
 	# No errors
 	return 0;

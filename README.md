@@ -12,7 +12,7 @@ Converts a CSV dataset as found in the [pssp website](pssp.srv.ualberta.ca/predi
 
 ### Usage
 
-`$ python parser.py input_dataset.csv outputprefix`
+`$ python3 parser.py input_dataset.csv outputprefix`
 
 This will read the `input_dataset.csv` file and output two files `outputprefix.data` with the converted dataset and `outputprefix.intervals` with the intervals file for the dataset.
 
@@ -22,7 +22,7 @@ Converts a CSV dataset as found in the [pssp website](pssp.srv.ualberta.ca/predi
 
 ### Usage
 
-`$ python crossvalidation.py [-h] --input INFILE --output OUTDIR [--folds FOLDS] [--intervals INTERVALS]`
+`$ python3 crossvalidation.py [-h] --input INFILE --output OUTDIR [--folds FOLDS] [--intervals INTERVALS]`
 
 ```
 arguments:
@@ -47,7 +47,27 @@ Where `{fold}` is a number from 1 to `{FOLDS}` (so one directory per fold) and `
 
 ## findc
 
-In progress.
+Tries to find the best C1 value to be used with a specific training dataset and prints it to `stdout`.
+
+### Usage
+
+`$ python3 findc.py [-h] --cross CVDIR --ds NAME [--folds FOLDS] [--start START] [--end END] [--mtlr MTLR] [--loss LOSS]`
+
+```
+arguments:
+  -h, --help            show this help message and exit
+  --cross CVDIR, -c CVDIR
+                        directory with crossvalidation output (foldX
+                        directories).
+  --ds NAME, -n NAME    dataset name (not filename--so strip the .data).
+  --folds FOLDS, -f FOLDS
+                        number of iterations for the crossvalidation.
+  --start START, -s START
+                        the start of the range of possible C values.
+  --end END, -e END     the end of the range of possible C values.
+  --mtlr MTLR, -p MTLR  directory where the mtlr executables are located.
+  --loss LOSS, -l LOSS  specific loss function to optimize for.
+```
 
 ## TODO
 
